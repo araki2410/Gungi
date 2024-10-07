@@ -110,7 +110,7 @@ def main():
         phase = game.process(random.choice(game.possible_action()))
         #game.gungi.show_board()
         if phase == "gameset":
-            if game.turn < 100:
+            if game.turn < 60:
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
                 print(filename)
 
