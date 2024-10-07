@@ -116,7 +116,7 @@ def main():
 
                 pickle.dump(game.fullscore(), open(logpath+filename, mode='wb'))
 
-            time.sleep(0.4)
+            #time.sleep(0.4)
             while not game.process() == "main":
                 pass
 
