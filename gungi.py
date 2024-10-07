@@ -310,9 +310,6 @@ class Gungi:
                         k = x1 + (i * xdic)
                         if self.board[j][k].level() > 0:
                             return False
-                    """for i in y_range:
-                        if self.board[i][i].level() > 0:
-                            return False"""
                     pass
 
                 ## 縦移動
