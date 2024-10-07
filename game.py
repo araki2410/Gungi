@@ -4,6 +4,7 @@ import gungi
 
 import random ### ランダム行動のために呼んでる。ランダム行動消したら不要
 import time ###
+import pickle
 
 class Match:
     def __init__(self):
@@ -112,8 +113,7 @@ def main():
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
                 print(filename)
 
-                with open(logpath+filename, mode='w') as f:
-                    f.write(str(game.fullscore()))
+                pickle.dump(game.fullscore(), open(logpath+filename, mode='wb'))
 
             time.sleep(0.4)
             while not game.process() == "main":
