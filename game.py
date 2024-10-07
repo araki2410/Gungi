@@ -65,7 +65,6 @@ class Match:
         phase = self.gamephase
         match phase:
             case "init":
-                print("init")
                 self.new_game()
                 #self.gamephase = "setup"
                 self.new_game_begginer01()
@@ -77,7 +76,7 @@ class Match:
                 self.gamephase = "main"
 
             case "main":
-                print("try score: ", score)
+                #print("try score: ", score)
                 self.play_piece(score) ### [y,x,lv]
 
                 self.turn += 1
@@ -85,8 +84,8 @@ class Match:
                 if self.check_gameset():
                     self.gamephase = "gameset"
                     self.winner = ["S","F"][self.turn%2]
-                    print("gameset")
-                    print("TURN:",self.turn, "   WINNER: ",self.players[self.turn%2])
+                    #print("gameset")
+                    #print("TURN:",self.turn, "   WINNER: ",self.players[self.turn%2])
 
             case "gameset":
                 self.gamephase = "init"
@@ -102,12 +101,12 @@ def main():
 
     game = Match()
     phase = game.process()
-    game.gungi.show_board()
+    #game.gungi.show_board()
 
 
     while phase:
         phase = game.process(random.choice(game.possible_action()))
-        game.gungi.show_board()
+        #game.gungi.show_board()
         if phase == "gameset":
             if game.turn < 100:
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
@@ -120,6 +119,6 @@ def main():
             while not game.process() == "main":
                 pass
 
-        print("=========")
+        #print("=========")
 
 main()

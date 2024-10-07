@@ -52,7 +52,7 @@ class Gungi:
             ### 「新」
             if self.can_drop(piece, to_location):
                 self.set_piece(piece, to_location)
-                self.show_score(piece)
+                #self.show_score(piece)
                 return True
 
         elif piece.state == piece.state_board():
@@ -69,7 +69,7 @@ class Gungi:
                 
                 if played:
                     self.add_score(piece)
-                    self.show_score(piece)
+                    #self.show_score(piece)
                 else:
                     print("操作失敗")
                 return played
@@ -112,7 +112,7 @@ class Gungi:
         if self.can_drop(piece, location):
             self.set_piece(piece, location)
             self.add_score(piece)
-            self.show_score(piece)
+            #self.show_score(piece)
         return 0
 
     def show_board(self):
