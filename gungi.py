@@ -91,9 +91,6 @@ class Gungi:
         self.set_piece(piece, to_location)
         return True
 
-    def remove_piece(self, location, move_piece=None):
-        return True
-
     def change_piece(self, location):
         ### 「謀将」用関数
         return True
@@ -140,17 +137,6 @@ class Gungi:
                 print("]", end="")
             #print()
             print()
-    
-    def return_hands(self):
-        white = {}
-        black = {}
-        for i in self.all_piece.values():
-            if i.state == i.state_hand():
-                if i.pieceID < 26:
-                    white[i.pieceID]=i.piecetype
-                else:
-                    black[i.pieceID]=i.piecetype
-        return white, black
 
     def return_playable_piece(self):
         white = {}
