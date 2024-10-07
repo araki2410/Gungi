@@ -78,9 +78,10 @@ class Match:
 
             case "main":
                 #print("try score: ", score)
-                self.play_piece(score) ### [y,x,lv]
+                played = self.play_piece(score) ### [y,x,lv]
 
-                self.turn += 1
+                if played:
+                    self.turn += 1
 
                 if self.check_gameset():
                     self.gamephase = "gameset"
