@@ -52,6 +52,7 @@ class Gungi:
             ### 「新」
             if self.can_drop(piece, to_location):
                 self.set_piece(piece, to_location)
+                self.add_score(piece)
                 #self.show_score(piece)
                 return True
 
@@ -75,6 +76,7 @@ class Gungi:
                 return played
 
         print("操作に失敗しました")
+        raise
         return False
 
     def set_piece(self, piece, location):
