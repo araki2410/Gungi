@@ -71,12 +71,10 @@ class Match:
                 self.new_game_begginer01()
 
                 self.gamephase = "main"
-                return True
 
             case "setup":
                 ## 初期配置
                 self.gamephase = "main"
-                return True
 
             case "main":
                 print("try score: ", score)
@@ -89,31 +87,28 @@ class Match:
                     self.winner = ["S","F"][self.turn%2]
                     print("gameset")
                     print("TURN:",self.turn, "   WINNER: ",self.players[self.turn%2])
-                    return False
-                    
-                return True
 
             case "gameset":
                 self.gamephase = "init"
-                return True
+
             case _:
                 print("ERROR: [CASE EXCEPTION] gamephase have a something error.")
-                return False
+                raise
 
-        return True
+        return self.gamephase
 
 def main():
     logpath = "Log/"
 
     game = Match()
-    game.process()
+    phase = game.process()
     game.gungi.show_board()
 
 
-    while True:
-        proc = game.process(random.choice(game.possible_action()))
+    while phase:
+        phase = game.process(random.choice(game.possible_action()))
         game.gungi.show_board()
-        if not proc:
+        if phase == "gameset":
             if game.turn < 100:
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
                 print(filename)
@@ -122,6 +117,9 @@ def main():
                     f.write(str(game.fullscore()))
 
             time.sleep(0.4)
+            while not game.process() == "main":
+                pass
+
         print("=========")
 
 main()
