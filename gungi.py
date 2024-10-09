@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import pieces
-import numpy
 
 class Gungi:
     def __init__(self, y=9, x=9):
@@ -17,8 +16,9 @@ class Gungi:
         self.score = []
         self.all_piece = {}
 
-        self.board = numpy.full((self.height,self.width), Cell(-1,-1))
+        self.board = []
         for i in range(self.height):
+            self.board.append([0]*self.width)
             for j in range(self.width):
                 self.board[i][j]=Cell(i,j)
 
@@ -51,7 +51,7 @@ class Gungi:
         if piece.state == piece.state_hand():
             ### 「新」
             if self.can_drop(piece, to_location):
-                self.set_piece(piece, to_location)
+                self.push(piece, to_location)
                 self.add_score(piece)
                 #self.show_score(piece)
                 return True
@@ -59,7 +59,9 @@ class Gungi:
         elif piece.state == piece.state_board():
             ### 盤上にある場合、今の状況から目的地に動けるか確認してから動く。
             ## 駒から見てどこに動くのか逆算してから、動けるかどうか確認する。
-            vector = (numpy.array(to_location)-numpy.array(piece.location)).tolist()
+            vector = []
+            for i in range(0, len(to_location)):
+                vector.append(to_location[i] - piece.location[i])
             if self.can_move(piece, vector):
                 ## 駒が重なる場合取る
                 to_cell = self.board[to_location[0]][to_location[1]]
@@ -79,7 +81,7 @@ class Gungi:
         raise
         return False
 
-    def set_piece(self, piece, location):
+    def push(self, piece, location):
         ### 駒を設置する。ここでは設置の正当性は検証しない。
         ### 内部から呼ぶ。
         self.board[location[0]][location[1]].push_piece(piece)
@@ -90,7 +92,7 @@ class Gungi:
     def move_piece(self, piece, to_location):
         y,x,lv = piece.location
         self.board[y][x].pop_piece()
-        self.set_piece(piece, to_location)
+        self.push(piece, to_location)
         return True
 
     def change_piece(self, location):
@@ -112,7 +114,7 @@ class Gungi:
                 raise
 
         if self.can_drop(piece, location):
-            self.set_piece(piece, location)
+            self.push(piece, location)
             self.add_score(piece)
             #self.show_score(piece)
         return 0
