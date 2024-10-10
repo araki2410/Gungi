@@ -100,7 +100,7 @@ class Gungi:
             self.add_score(piece, from_location, setup, take, change)
             #self.show_score(piece)
         else:
-            print("操作に失敗失敗しました。")
+            print("操作に失敗しました。")
 
         return result
 
