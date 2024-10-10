@@ -107,6 +107,7 @@ def main():
 
 
     while phase:
+        #print("=========")
         phase = game.process(random.choice(game.possible_action()))
         #game.gungi.show_board()
         if phase == "gameset":
@@ -114,12 +115,12 @@ def main():
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
                 print(filename)
 
-                pickle.dump(game.fullscore(), open(logpath+filename, mode='wb'))
+                with open(logpath+filename,mode='w') as f:
+                    f.write(" ".join(game.fullscore()))
 
             #time.sleep(0.4)
             while not game.process() == "main":
                 pass
 
-        #print("=========")
 
 main()

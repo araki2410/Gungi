@@ -36,11 +36,30 @@ class Gungi:
         for i in range(1, 51):
             self.all_piece[i]=Piece(i)
 
-    def add_score(self, piece):
-        y, x, level = piece.location
-        log = [y, x, level, piece.pieceID]
-        self.score.append(log)
-        return log
+    def add_score(self, piece, from_location, setup=False, take=False, change=False):
+        blank = "00"
+        if from_location == None:
+            from_hex = "00"
+        else:
+            from_hex = self.location2hex(from_location)
+
+        if setup:
+            act = 1
+        elif take:
+            act = 2
+        elif change:
+            act = 3
+        else:
+            act = 0
+
+        pID_bin = format(piece.pieceID, "06b")
+        to_hex = self.location2hex(piece.location)
+
+        #log32 = blank + from_hex + format(int((act + pID_bin), 2), "02x") + to_hex
+        log16 = format(int((format(act,"02b") + pID_bin), 2), "02x") + to_hex
+
+        self.score.append(log16)
+        return log16
 
     def show_score(self, piece):
         y, x, level = piece.location
@@ -48,7 +67,9 @@ class Gungi:
         print("".join(map(str, log)))
         
 
-    def play_piece(self, piece, to_location, setup=False):
+    def play_piece(self, piece, to_location, setup=False, change=False):
+        from_location = piece.location
+        take = False
         if setup:
             result = self.setup_piece(piece, to_location)
 
@@ -71,11 +92,12 @@ class Gungi:
                 to_cell = self.board[to_location[0]][to_location[1]]
                 if to_cell.level() == to_location[2]:
                     to_cell.take_piece(piece)
-                
+                    take = True
+
                 result = self.move_piece(piece, to_location)
-                
+
         if result:
-            self.add_score(piece)
+            self.add_score(piece, from_location, setup, take, change)
             #self.show_score(piece)
         else:
             print("操作に失敗失敗しました。")
@@ -410,7 +432,7 @@ class Gungi:
         self.play_piece(self.all_piece[41], [2,6,1], setup=True)
         self.play_piece(self.all_piece[42], [2,0,1], setup=True)
         self.play_piece(self.all_piece[43], [2,4,1], setup=True)
-        self.play_piece(self.all_piece[44], [2,8,1], setup=True)
+        self.play_piece(self.all_piece[44], [2,8,1], setup=False)
         self.all_piece[46].state = self.all_piece[1].state_ban()
         self.all_piece[47].state = self.all_piece[1].state_ban()
         self.all_piece[48].state = self.all_piece[1].state_ban()
