@@ -4,7 +4,6 @@ import gungi
 
 import random ### ランダム行動のために呼んでる。ランダム行動消したら不要
 import time ###
-import pickle
 
 class Match:
     def __init__(self):
