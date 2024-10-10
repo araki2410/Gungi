@@ -13,14 +13,17 @@ class Gungi:
         self.init_game()
 
     def init_game(self):
+        rowid = ["1","2","3","4","5","6","7","8","9"]
+        colid = ["a","b","c","d","e","f","g","h","i"]
         self.score = []
         self.all_piece = {}
 
         self.board = []
         for i in range(self.height):
+            cid = rowid[i]+colid[i]
             self.board.append([0]*self.width)
             for j in range(self.width):
-                self.board[i][j]=Cell(i,j)
+                self.board[i][j]=Cell(i,j,cid)
 
         """
         _allpiece={
@@ -405,9 +408,10 @@ class Gungi:
 
 
 class Cell:
-    def __init__(self, y, x):
+    def __init__(self, y, x, cid):
         self.x = x
         self.y = y
+        self.cid = cid
         self.piece_list = []
 
     def push_piece(self, piece):
