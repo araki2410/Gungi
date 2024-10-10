@@ -84,7 +84,6 @@ class Gungi:
 
     def push(self, piece, location):
         ### 駒を設置する。ここでは設置の正当性は検証しない。
-        ### 内部から呼ぶ。
         self.board[location[0]][location[1]].push_piece(piece)
         piece.location = location
         piece.state = piece.state_board()
@@ -363,6 +362,20 @@ class Gungi:
 
         return cells
 
+    def location2hex(self, location):
+        y,x,lv = location
+        dec = x + (self.width * y) + (self.width * self.height * (lv-1))
+        return format(dec, '02x')
+
+    def hex2location(self, hex):
+        dec = int(hex, 16)
+        lv = int(dec / (self.width * self.height))
+        y = int((dec-(self.width * self.height * lv))/ self.height)
+        x = dec  - (self.width * self.height * lv) - (self.width * y)
+        location = [y,x,lv+1]
+        return location
+
+
     def setup_game_begginer01(self):
         self.init_game()
         self.setup_piece(self.all_piece[1], [8,4,1])
@@ -473,7 +486,7 @@ class Cell:
 
 class Piece:
     def __init__(self, pieceID, imagepath=None):
-        self.location = None ### [0,0,0]
+        self.location = None ### [0,0,1]
         self.state = "hand" ### hand, board, taken, ban
         self.pieceID = pieceID
         self.imagepath = imagepath
