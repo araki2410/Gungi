@@ -48,14 +48,17 @@ class Gungi:
         print("".join(map(str, log)))
         
 
-    def play_piece(self, piece, to_location):
-        if piece.state == piece.state_hand():
+    def play_piece(self, piece, to_location, setup=False):
+        if setup:
+            result = self.setup_piece(piece, to_location)
+
+        elif piece.state == piece.state_hand():
             ### 「新」
             if self.can_drop(piece, to_location):
                 self.push(piece, to_location)
-                self.add_score(piece)
-                #self.show_score(piece)
-                return True
+                result = True
+            else:
+                result = False
 
         elif piece.state == piece.state_board():
             ### 盤上にある場合、今の状況から目的地に動けるか確認してから動く。
@@ -69,18 +72,15 @@ class Gungi:
                 if to_cell.level() == to_location[2]:
                     to_cell.take_piece(piece)
                 
-                played = self.move_piece(piece, to_location)
+                result = self.move_piece(piece, to_location)
                 
-                if played:
-                    self.add_score(piece)
-                    #self.show_score(piece)
-                else:
-                    print("操作失敗")
-                return played
+        if result:
+            self.add_score(piece)
+            #self.show_score(piece)
+        else:
+            print("操作に失敗失敗しました。")
 
-        print("操作に失敗しました")
-        raise
-        return False
+        return result
 
     def push(self, piece, location):
         ### 駒を設置する。ここでは設置の正当性は検証しない。
@@ -105,19 +105,21 @@ class Gungi:
             if location[0] < self.height-3: # < 6:
                 ### 初期配置は3列目まで
                 print("初期配置は3列目まで_W")
-                raise
+                return False
 
         else:                  ### BLACK
             if location[0] > 2:
                 ### 初期配置は3列目まで
                 print("初期配置は3列目まで_B")
-                raise
+                return False
 
         if self.can_drop(piece, location):
             self.push(piece, location)
-            self.add_score(piece)
+            #self.add_score(piece)
             #self.show_score(piece)
-        return 0
+            return True
+
+        raise
 
     def show_board(self):
         for i in self.board:
@@ -378,37 +380,37 @@ class Gungi:
 
     def setup_game_begginer01(self):
         self.init_game()
-        self.setup_piece(self.all_piece[1], [8,4,1])
-        self.setup_piece(self.all_piece[2], [8,3,1])
-        self.setup_piece(self.all_piece[3], [8,5,1])
-        self.setup_piece(self.all_piece[6], [6,3,1])
-        self.setup_piece(self.all_piece[7], [6,5,1])
-        self.setup_piece(self.all_piece[8], [7,4,1])
-        self.setup_piece(self.all_piece[13], [7,1,1])
-        self.setup_piece(self.all_piece[14], [7,7,1])
-        self.setup_piece(self.all_piece[15], [6,2,1])
-        self.setup_piece(self.all_piece[16], [6,6,1])
-        self.setup_piece(self.all_piece[17], [6,0,1])
-        self.setup_piece(self.all_piece[18], [6,4,1])
-        self.setup_piece(self.all_piece[19], [6,8,1])
+        self.play_piece(self.all_piece[1], [8,4,1], setup=True)
+        self.play_piece(self.all_piece[2], [8,3,1], setup=True)
+        self.play_piece(self.all_piece[3], [8,5,1], setup=True)
+        self.play_piece(self.all_piece[6], [6,3,1], setup=True)
+        self.play_piece(self.all_piece[7], [6,5,1], setup=True)
+        self.play_piece(self.all_piece[8], [7,4,1], setup=True)
+        self.play_piece(self.all_piece[13], [7,1,1], setup=True)
+        self.play_piece(self.all_piece[14], [7,7,1], setup=True)
+        self.play_piece(self.all_piece[15], [6,2,1], setup=True)
+        self.play_piece(self.all_piece[16], [6,6,1], setup=True)
+        self.play_piece(self.all_piece[17], [6,0,1], setup=True)
+        self.play_piece(self.all_piece[18], [6,4,1], setup=True)
+        self.play_piece(self.all_piece[19], [6,8,1], setup=True)
         self.all_piece[21].state = self.all_piece[1].state_ban()
         self.all_piece[22].state = self.all_piece[1].state_ban()
         self.all_piece[23].state = self.all_piece[1].state_ban()
         self.all_piece[24].state = self.all_piece[1].state_ban()
         self.all_piece[25].state = self.all_piece[1].state_ban()
-        self.setup_piece(self.all_piece[26], [0,4,1])
-        self.setup_piece(self.all_piece[27], [0,5,1])
-        self.setup_piece(self.all_piece[28], [0,3,1])
-        self.setup_piece(self.all_piece[31], [2,3,1])
-        self.setup_piece(self.all_piece[32], [2,5,1])
-        self.setup_piece(self.all_piece[33], [1,4,1])
-        self.setup_piece(self.all_piece[38], [1,1,1])
-        self.setup_piece(self.all_piece[39], [1,7,1])
-        self.setup_piece(self.all_piece[40], [2,2,1])
-        self.setup_piece(self.all_piece[41], [2,6,1])
-        self.setup_piece(self.all_piece[42], [2,0,1])
-        self.setup_piece(self.all_piece[43], [2,4,1])
-        self.setup_piece(self.all_piece[44], [2,8,1])
+        self.play_piece(self.all_piece[26], [0,4,1], setup=True)
+        self.play_piece(self.all_piece[27], [0,5,1], setup=True)
+        self.play_piece(self.all_piece[28], [0,3,1], setup=True)
+        self.play_piece(self.all_piece[31], [2,3,1], setup=True)
+        self.play_piece(self.all_piece[32], [2,5,1], setup=True)
+        self.play_piece(self.all_piece[33], [1,4,1], setup=True)
+        self.play_piece(self.all_piece[38], [1,1,1], setup=True)
+        self.play_piece(self.all_piece[39], [1,7,1], setup=True)
+        self.play_piece(self.all_piece[40], [2,2,1], setup=True)
+        self.play_piece(self.all_piece[41], [2,6,1], setup=True)
+        self.play_piece(self.all_piece[42], [2,0,1], setup=True)
+        self.play_piece(self.all_piece[43], [2,4,1], setup=True)
+        self.play_piece(self.all_piece[44], [2,8,1], setup=True)
         self.all_piece[46].state = self.all_piece[1].state_ban()
         self.all_piece[47].state = self.all_piece[1].state_ban()
         self.all_piece[48].state = self.all_piece[1].state_ban()
