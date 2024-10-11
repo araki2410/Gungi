@@ -173,6 +173,43 @@ class Gungi:
             #print()
             print()
 
+    def merge_move(self, moves):
+        hands = {}
+        for i in moves:
+            pID = i[3]
+            if self.all_piece[pID].state == self.all_piece[pID].state_hand():
+                ptype = self.all_piece[pID].piecetype
+                vecs = hands.get(ptype, {})
+                hands[ptype] = vecs
+                vec = vecs.get(pID, [])
+                vec.append(i[:3])
+                vecs[pID] = vec
+        for i in hands.keys():
+            if len(hands[i]):
+                l = list(hands[i].keys())[1:]
+                for j in l:
+                    for k in hands[i][j]:
+                        rm_move = k+[j]
+                        moves.remove(rm_move)
+        return moves
+
+    def legal_move(self):
+        w_pIDs = self.return_playable_piece()[0].keys()
+        b_pIDs = self.return_playable_piece()[1].keys()
+        w_actions = []
+        b_actions = []
+        for i in w_pIDs:
+            ### ID i の駒の移動可能セル[0,0]毎に、段とiを挿入[0,0,段,i]して、可能な行動をリストにする。
+            i_acts = self.return_movable_area(self.all_piece[i])
+            list(map(lambda x: x.append(i), i_acts))
+            w_actions = w_actions + i_acts
+        for i in b_pIDs:
+            i_acts = self.return_movable_area(self.all_piece[i])
+            list(map(lambda x: x.append(i), i_acts))
+            b_actions = b_actions + i_acts
+
+        return self.merge_move(w_actions), self.merge_move(b_actions)
+
     def return_playable_piece(self):
         white = {}
         black = {}
