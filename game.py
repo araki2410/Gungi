@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 
 import gungi
+import loss
 
 import random ### ランダム行動のために呼んでる。ランダム行動消したら不要
 import time ###
@@ -37,14 +38,8 @@ class Match:
 
     def possible_action(self):
         player = self.turn%2
-        pieceIDs = self.gungi.return_playable_piece()[player].keys()
-        actions = []
-        for i in pieceIDs:
-            ### ID i の駒の移動可能セル[0,0]毎に、段とiを挿入[0,0,段,i]して、可能な行動をリストにする。
-            i_acts = self.gungi.return_movable_area(self.gungi.all_piece[i])
-            list(map(lambda x: x.append(i), i_acts))
-            actions = actions + i_acts
-        return actions
+        all_legal_move = self.gungi.legal_move()
+        return all_legal_move[player]
 
     def check_gameset(self):
         suiIDs = [self.gungi.white_SUI, self.gungi.black_SUI]
@@ -99,16 +94,22 @@ class Match:
 
 def main():
     logpath = "Log/"
-
+    cpu = loss.Org()
     game = Match()
     phase = game.process()
-    #game.gungi.show_board()
+    game.gungi.show_board()
 
 
     while phase:
-        #print("=========")
-        phase = game.process(random.choice(game.possible_action()))
-        #game.gungi.show_board()
+        print("=========", game.turn)
+        if game.turn % 2 == 0:
+            move = cpu.search(game.gungi)
+        else:
+            move = random.choice(game.possible_action())
+        print(move)
+        phase = game.process(move)
+        game.gungi.show_board()
+        time.sleep(0.4)
         if phase == "gameset":
             if game.turn < 60:
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
