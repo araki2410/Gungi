@@ -76,7 +76,7 @@ class Gungi:
         elif piece.state == piece.state_hand():
             ### 「新」
             if self.can_drop(piece, to_location):
-                self.push(piece, to_location)
+                self.push(to_location+[piece.pieceID])
                 result = True
             else:
                 result = False
@@ -94,7 +94,7 @@ class Gungi:
                     to_cell.take_piece(piece)
                     take = True
 
-                result = self.move_piece(piece, to_location)
+                result = self.move_piece(to_location+[piece.pieceID])
 
         if result:
             self.add_score(piece, from_location, setup, take, change)
@@ -104,17 +104,24 @@ class Gungi:
 
         return result
 
-    def push(self, piece, location):
+    def push(self, move):
         ### 駒を設置する。ここでは設置の正当性は検証しない。
-        self.board[location[0]][location[1]].push_piece(piece)
-        piece.location = location
+        y,x,lv,pID = move
+        piece = self.all_piece[pID]
+        self.board[y][x].push_piece(piece)
+        piece.location = [y,x,lv]
         piece.state = piece.state_board()
         return True
 
-    def move_piece(self, piece, to_location):
-        y,x,lv = piece.location
-        self.board[y][x].pop_piece()
-        self.push(piece, to_location)
+    def move_piece(self, move):
+        y,x,lv,pID = move
+        piece = self.all_piece[pID]
+        try:
+            from_y, from_x, _ = piece.location
+            self.board[from_y][from_x].pop_piece()
+        except:
+            pass
+        self.push(move)
         return True
 
     def change_piece(self, location):
@@ -136,7 +143,7 @@ class Gungi:
                 return False
 
         if self.can_drop(piece, location):
-            self.push(piece, location)
+            self.push(location+[piece.pieceID])
             #self.add_score(piece)
             #self.show_score(piece)
             return True
@@ -493,7 +500,8 @@ class Cell:
 
     def active_piece(self):
         try:
-            piece = self.piece_list.pop(-1)
+            #piece = self.piece_list.pop(-1)
+            piece = self.piece_list[-1]
             return piece
         except:
             return None
@@ -510,7 +518,7 @@ class Cell:
 
 class Piece:
     def __init__(self, pieceID, imagepath=None):
-        self.location = None ### [0,0,1]
+        self.location = None ### [0,0,1] y,x,lv
         self.state = "hand" ### hand, board, taken, ban
         self.pieceID = pieceID
         self.imagepath = imagepath
