@@ -68,6 +68,7 @@ class Gungi:
         
 
     def play_piece(self, piece, to_location, setup=False, change=False):
+        ## 指定の位置に指定の駒を打てるか検証して、可能なら操作を実行する。
         from_location = piece.location
         take = False
         if setup:
