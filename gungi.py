@@ -69,10 +69,11 @@ class Gungi:
 
     def play_piece(self, move, setup=False, change=False):
         ## 指定の位置に指定の駒を打てるか検証して、可能なら操作を実行する。
-        y,x,lv,pID = move
+        y,x,to_lv,pID = move
         piece = self.all_piece[pID]
         from_location = piece.location
         take = False
+        result = False
         if setup:
             result = self.setup_piece(move)
 
@@ -93,7 +94,7 @@ class Gungi:
             if self.can_move(piece, vector):
                 ## 駒が重なる場合取る
                 to_cell = self.board[y][x]
-                if to_cell.level() == lv:
+                if to_cell.level() == to_lv:
                     to_cell.take_piece(piece)
                     take = True
 
