@@ -277,16 +277,14 @@ class Gungi:
 
 
     def can_drop(self, piece, location):
-        ### 初期配置 self.setup_piece()
-        ### 「新」 self.move_piece()
-
+        ### 指定の位置に指定の駒を「新」できるか検証する
         to_y, to_x, _ = location
         try:
             to_pID = self.board[to_y][to_x].active_piece().pieceID
         except:
             to_pID = -1
 
-        ## 手駒のみ判定する
+        ## 手駒以外は「新」できない
         if piece.state != piece.state_hand():
             return False
         ## 盤外には設置できない
