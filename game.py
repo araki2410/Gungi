@@ -30,7 +30,7 @@ class Match:
                 self.gungi.setup_piece(self.gungi.all_piece[pID], [y,x,lv])
             case "main":
                 y,x,lv,pID = score 
-                self.gungi.play_piece(self.gungi.all_piece[pID], [y,x,lv])
+                self.gungi.play_piece([y,x,lv, pID])
             case _:
                 return False
         return True
