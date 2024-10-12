@@ -95,7 +95,7 @@ class Gungi:
                     to_cell.take_piece(piece)
                     take = True
 
-                result = self.move_piece(to_location+[piece.pieceID])
+                result = self.push(to_location+[piece.pieceID])
 
         if result:
             self.add_score(piece, from_location, setup, take, change)
@@ -109,20 +109,15 @@ class Gungi:
         ### 駒を設置する。ここでは設置の正当性は検証しない。
         y,x,lv,pID = move
         piece = self.all_piece[pID]
-        self.board[y][x].push_piece(piece)
-        piece.location = [y,x,lv]
-        piece.state = piece.state_board()
-        return True
-
-    def move_piece(self, move):
-        y,x,lv,pID = move
-        piece = self.all_piece[pID]
         try:
             from_y, from_x, _ = piece.location
             self.board[from_y][from_x].pop_piece()
         except:
             pass
-        self.push(move)
+
+        self.board[y][x].push_piece(piece)
+        piece.location = [y,x,lv]
+        piece.state = piece.state_board()
         return True
 
     def change_piece(self, location):
