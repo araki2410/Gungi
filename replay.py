@@ -24,7 +24,8 @@ for i in score:
     act = int(log16[:2], 2)
     turn += 1
 
+    move = to_location + [pID]
     piece = gungi.all_piece[pID]
-    gungi.play_piece(piece, to_location)
+    gungi.play_piece(move)
     gungi.show_board()
     gungi.show_score(piece)
