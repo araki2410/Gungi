@@ -5,9 +5,8 @@ import random
 class Org():
     def __init__(self):
         a = "A"
-        #self.gungi.setup_game_begginer01()
 
-    def search(self, gungi, max_depth=3, color="WHITE"):
+    def search(self, gungi, max_depth=1, color="WHITE"):
         infe = self.tree(max_depth, gungi)
         #print(infe)
         return infe[0]
@@ -32,11 +31,11 @@ class Org():
             next_value = None
             next_moves = []
             move_and_value = []
-            candy = random.sample(legal_moves, 20)
-            #for i in legal_moves[:100]:
+            candy = random.sample(legal_moves, min(len(legal_moves),100))
             for i in candy:
+            #for i in legal_moves[:100]:
                 test = copy.deepcopy(gungi)
-                test.move_piece(i)
+                test.play_piece(i)
                 value = self.value(test)
 
                 if max_value == None: ##1パターン目を基準値にする
@@ -84,7 +83,7 @@ class Org():
         value = 0
         y = len(board)
         x = len(board[0])
-        if gungi.all_piece[26].state == gungi.all_piece[26].state_taken:
+        if gungi.all_piece[26].state == gungi.all_piece[26].state_taken():
             return 100
         for i in range(0,y):
             for j in range(0,x):
@@ -105,33 +104,36 @@ class Org():
                     value -= cell.level()
                     ey = cell.y
                     ex = cell.x
+
                     for k in range(0,x):
                         if 0<= (ex - k) < 9:
                             pass
                         elif 0<= (ex + k) < 9:
                             k = -1 * (ex - k)
-
                         try:
                             mpid = board[ey][k].active_piece()
                             if 0 < mpid  <= 25:
-                                value += board[ey][k].level()
+                                mylevel = board[ey][k].level()
+                                distance = abs(ex - k)
+                                value += mylevel*distance
                         except:
                             pass
+
                     for k in range(0,y):
                         if 0<= (ey - k) < 9:
                             pass
                         elif 0<= (ey + k) < 9:
                             k = -1 * (ey - k)
-
-
                         try:
                             mpid = board[k][ex].active_piece().pieceID
                             if 0 < mpid <= 25:
-                                value += board[k][ex].level()
+                                mylevel = board[k][ex].level()
+                                distance = abs(ex - k)
+                                value += mylevel*distance
                         except:
                             pass
 
 
         return value
                 
-Org()
+#Org()
