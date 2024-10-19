@@ -89,13 +89,11 @@ class Gungi:
         elif piece.state == piece.state_board():
             ### 動かしたい駒が盤上にある場合、今の状況から目的地に動けるか確認してから動く。
             ## 駒から見てどこに動くのか逆算してから、動けるかどうか確認する。
-            vector = []
-            for i in range(3):
-                vector.append(move[i] - from_location[i])
+            vector = [move[0]-from_location[0], move[1]-from_location[1]]
             if self.can_move(piece, vector):
                 ## 駒が重なる場合取る
                 to_cell = self.board[y][x]
-                if to_cell.level() == to_lv:
+                if to_cell.level() >= to_lv:
                     to_cell.take_piece(piece)
                     take = True
 
@@ -262,10 +260,10 @@ class Gungi:
 
         for i in range(1, piece.level()+1):
             ### ツケの段ごとに移動範囲を追加
-            for j in potential[i]:
+            for vector in potential[i]:
                 ### 移動範囲に移動可能か判定
                 ## 相対座標[0,-1]を入力して、絶対座標[7,4,1]をlocationsに受け取る
-                locations = self.can_move(piece, j+[0])
+                locations = self.can_move(piece, vector)
                 if locations:
                     movable_cell = movable_cell + locations
         
@@ -314,7 +312,7 @@ class Gungi:
         ## 盤上から盤上へ動かす場合、詳細に判断する
         if piece.state == piece.state_board():
             y1,x1,level1 = piece.location
-            y2,x2,_l = move_vector
+            y2,x2 = move_vector
             to_y = y1 + y2
             to_x = x1 + x2
 
@@ -334,7 +332,7 @@ class Gungi:
                 return False
 
             ## 駒の性能通りの動きか
-            if not (piece.potential[1]+piece.potential[2]+piece.potential[3]).count([move_vector[0],move_vector[1]]):
+            if not (piece.potential[1]+piece.potential[2]+piece.potential[3]).count([y2,x2]):
                 return False
 
             ## 盤外 (目的地toがマイナスの場合、端から端にワープしてしまうので、これを防ぐ)
@@ -407,8 +405,12 @@ class Gungi:
         if to_pID > 0:
             level = to_cell.level()
             if level < self.max_level:
-                ## 移動先が2段以下なら、ツケることが可能
-                cells.append([to_y,to_x,level+1])
+                if to_pID == 1 or to_pID == 26:
+                    ## 帥の場合は取る。ツケられないことにする。
+                    pass
+                else:
+                    ## 移動先が2段以下なら、ツケることが可能
+                    cells.append([to_y,to_x,level+1])
         
             enemy_count = 0
             if (to_pID > 25 and piece.pieceID <= 25):
