@@ -329,7 +329,7 @@ class Gungi:
             except:
                 to_pID = -1
 
-            ## 駒は最上段にあるか
+            ## 動かしたい駒の上に、別の駒が乗っていないか
             if not (piece == self.board[y1][x1].active_piece()):
                 return False
 
