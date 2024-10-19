@@ -50,7 +50,7 @@ class Match:
                 if (self.gungi.board[y][x].active_piece() != sui) or (sui.state != sui.state_board()):
                     return True
             except:
-                ## 師の位置が取れない => 取られている
+                ## 帥の位置が取れない => 取られている
                 return True
 
     def fullscore(self):
@@ -105,7 +105,7 @@ def main():
         if game.turn % 2 == 0:
             move = cpu.search(game.gungi)
         else:
-            move = random.choice(game.possible_action())
+            move = cpu.search(game.gungi, color="BLACK")#random.choice(game.possible_action())
         print(move)
         phase = game.process(move)
         game.gungi.show_board()
