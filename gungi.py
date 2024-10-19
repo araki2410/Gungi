@@ -55,7 +55,7 @@ class Gungi:
         pID_bin = format(piece.pieceID, "06b")
         to_hex = self.location2hex(piece.location)
 
-        #log32 = blank + from_hex + format(int((act + pID_bin), 2), "02x") + to_hex
+        #log32 = blank + from_hex + format(int((str(act) + pID_bin), 2), "02x") + to_hex
         log16 = format(int((format(act,"02b") + pID_bin), 2), "02x") + to_hex
 
         self.score.append(log16)
