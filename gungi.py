@@ -63,8 +63,9 @@ class Gungi:
 
     def show_score(self, piece):
         y, x, level = piece.location
-        log = [x+1, y+1, level, piece.piecetype, piece.pieceID]
-        print("".join(map(str, log)))
+        for_pc = [y, x, level, piece.pieceID]
+        for_human = str(9-x)+str(y+1)+str(level)+piece.piecetype
+        print(for_pc, for_human)
         
 
     def play_piece(self, move, setup=False, change=False):
@@ -102,7 +103,6 @@ class Gungi:
 
         if result:
             self.add_score(piece, from_location, setup, take, change)
-            #self.show_score(piece)
         else:
             print("操作に失敗しました。")
 
@@ -143,8 +143,6 @@ class Gungi:
 
         if self.can_drop(move):
             self.push(move)
-            #self.add_score(piece)
-            #self.show_score(piece)
             return True
 
         raise
