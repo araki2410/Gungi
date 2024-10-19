@@ -430,14 +430,14 @@ class Gungi:
 
     def location2hex(self, location):
         y,x,lv = location
-        dec = x + (self.width * y) + (self.width * self.height * (lv-1))
+        dec = y + (self.width * x) + (self.width * self.height * (lv-1))
         return format(dec, '02x')
 
     def hex2location(self, hex):
         dec = int(hex, 16)
         lv = int(dec / (self.width * self.height))
-        y = int((dec-(self.width * self.height * lv))/ self.height)
-        x = dec  - (self.width * self.height * lv) - (self.width * y)
+        x = int((dec-(self.width * self.height * lv))/ self.height)
+        y = dec  - (self.width * self.height * lv) - (self.width * x)
         location = [y,x,lv+1]
         return location
 

@@ -6,9 +6,11 @@ from sys import argv
 try:
     filepath = argv[1]
 except:
-    print("$ python3 replay.py Log/2024Oct10_18:15:16_S32")
+    filepath = "Log/2024Oct19_16:59:12_S22"
+    print("$ python3 replay.py <FILE PATH>")
+    print("$ python3 replay.py", filepath)
     print()
-    filepath = "Log/2024Oct10_18:15:16_S32"
+
 
 gungi = gungi.Gungi()
 score = open(filepath, 'r').read().split(" ")
