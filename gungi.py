@@ -300,6 +300,7 @@ class Gungi:
     def can_move(self, piece, move_vector):
         ### 駒と移動先を比較して、移動可能か判断
         ## 取られている or 使用外の駒は移動不可
+        pID = piece.pieceID
         if piece.state == piece.state_ban() or piece.state == piece.state_taken():
             return False
 
@@ -344,20 +345,20 @@ class Gungi:
                 return False
 
             ### 自駒帥の上にはツケられない
-            if (to_pID == self.white_SUI and piece.pieceID < 26) or (to_pID == self.black_SUI and piece.pieceID >= 26):
+            if (to_pID == self.white_SUI and pID < 26) or (to_pID == self.black_SUI and pID >= 26):
                 return False
 
             ### 3段目が自駒の場合は移動できない
             if to_cell.level() == self.max_level:
-                if piece.pieceID > 25 and to_cell.active_piece().pieceID > 25:
+                if pID > 25 and to_cell.active_piece().pieceID > 25:
                     return False
-                if piece.pieceID <= 25 and to_cell.active_piece().pieceID <= 25:
+                if pID <= 25 and to_cell.active_piece().pieceID <= 25:
                     return False
 
             ### 駒を飛び越えられるか
             if abs(y2) >= 2 or abs(x2) >= 2:
                 ### 砲, 弓, 筒 = [21,22,23,24,46,47,48,49] は別処理
-                if [21,22,23,24,46,47,48,49].count(piece.pieceID):
+                if [21,22,23,24,46,47,48,49].count(pID):
                     ### 未実装
                     pass
                 
@@ -413,7 +414,7 @@ class Gungi:
                     cells.append([to_y,to_x,level+1])
         
             enemy_count = 0
-            if (to_pID > 25 and piece.pieceID <= 25):
+            if (to_pID > 25 and pID <= 25):
                 for i in to_cell.piece_list:
                     if range(26,51).count(i.pieceID):
                         enemy_count += 1
