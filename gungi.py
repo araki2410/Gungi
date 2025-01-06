@@ -313,9 +313,9 @@ class Gungi:
         ## 盤上から盤上へ動かす場合、詳細に判断する
         if piece.state == piece.state_board():
             y1,x1,level1 = piece.location
-            y2,x2 = move_vector
-            to_y = y1 + y2
-            to_x = x1 + x2
+            vec_y,vec_x = move_vector
+            to_y = y1 + vec_y
+            to_x = x1 + vec_x
 
             try:
                 to_cell = self.board[to_y][to_x]
@@ -333,7 +333,7 @@ class Gungi:
                 return False
 
             ## 駒の性能通りの動きか
-            if not (piece.potential[1]+piece.potential[2]+piece.potential[3]).count([y2,x2]):
+            if not (piece.potential[1]+piece.potential[2]+piece.potential[3]).count([vec_y,vec_x]):
                 return False
 
             ## 盤外 (目的地toがマイナスの場合、端から端にワープしてしまうので、これを防ぐ)
@@ -356,7 +356,7 @@ class Gungi:
                     return False
 
             ### 駒を飛び越えられるか
-            if abs(y2) >= 2 or abs(x2) >= 2:
+            if abs(vec_y) >= 2 or abs(vec_x) >= 2:
                 ### 砲, 弓, 筒 = [21,22,23,24,46,47,48,49] は、前方移動のみ飛び越えができる。別処理
                 if [21,22,23,24,46,47,48,49].count(pID):
                     ### 未実装
@@ -364,14 +364,14 @@ class Gungi:
                 
                 ### 通常駒は飛び越えられない。移動先への直線上に別の駒があったら移動できない
                 ## 斜め移動
-                elif abs(y2) >= 2 and abs(x2) >= 2:
+                elif abs(vec_y) >= 2 and abs(vec_x) >= 2:
                     i = 0
                     xdic = -1
-                    if y2 > 0:
+                    if vec_y > 0:
                         y_range = range(y1+1, to_y)
                     else:
                         y_range = range(to_y+1, y1)
-                    if x2 > 0:
+                    if vec_x > 0:
                         xdic = 1
                     for j in y_range:
                         i += 1
@@ -381,8 +381,8 @@ class Gungi:
                     pass
 
                 ## 縦移動
-                elif abs(y2) >= 2:
-                    if y2 > 0:
+                elif abs(vec_y) >= 2:
+                    if vec_y > 0:
                         ran = range(y1+1, to_y)
                     else:
                         ran = range(to_y+1, y1)
@@ -392,8 +392,8 @@ class Gungi:
                     pass
 
                 ## 横移動
-                elif abs(x2) >= 2:
-                    if (x2 > 0):
+                elif abs(vec_x) >= 2:
+                    if (vec_x > 0):
                         ran = range(x1+1, to_x)
                     else:
                         ran = range(to_x+1, x1)
