@@ -20,7 +20,7 @@ class Match:
 
     def new_game_begginer01(self):
         self.new_game()
-        self.gungi.setup_game_begginer01()
+        self.gungi.setup_game_begginer02()
         self.gamephase = "main"
 
     def play_piece(self, score):
@@ -105,13 +105,14 @@ def main():
         if game.turn % 2 == 0:
             move = cpu.search(game.gungi)
         else:
-            move = cpu.search(game.gungi, color="BLACK")#random.choice(game.possible_action())
+            move = random.choice(game.possible_action())
+            #move = cpu.search(game.gungi, color="BLACK")
         print(move)
         phase = game.process(move)
         game.gungi.show_board()
-        time.sleep(0.4)
+        time.sleep(0.6)
         if phase == "gameset":
-            if game.turn < 60:
+            if game.turn < 1:
                 filename = time.strftime("%Y%b%d_%H:%M:%S_", time.gmtime()) + game.winner + str(game.turn)
                 print(filename)
 
