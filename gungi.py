@@ -360,9 +360,47 @@ class Gungi:
                 ### 砲, 弓, 筒 = [21,22,23,24,46,47,48,49] は、前方移動のみ飛び越えができる。別処理
                 if [21,22,23,24,46,47,48,49].count(pID):
                     ### 未実装
-                    pass
+                    if pID <= 25: ## WHITE
+                        dir = -1
+                    else: ## BKACK
+                        dir = 1
+
+                    ## 前方移動。飛び越えられるか判定する
+                    if (vec_y > 0 and dir < 0) or (vec_y < 0 and dir > 0):
+                        ## 正面 (砲, 弓, 筒）
+                        if vec_x == 0: 
+                            if vec_y > 0:
+                                ran = range(y1+1, to_y)
+                            else:
+                                ran = range(to_y+1, y1)
+                            for i in ran:
+                                if self.board[i][to_x].level() > piece.level():
+                                    return False
+                            pass
+
+                        ## 桂馬移動 (弓のみ)
+                        else:
+                            if self.board[y1+dir][x1].level() > piece.level():
+                                # 1マス正面が、自マスより段が高い場合飛び越えは不可
+                                return False
+                            else:
+                                i = 0
+                                xdic = -1
+                                y_range = range(y1+2, to_y)
+                                if vec_x > 0:
+                                    xdic = 1
+                                for j in y_range:
+                                    i += 1
+                                    k = x1 + (i * xdic)
+                                    if self.board[j][k].level() > piece.level():
+                                        return False
+                            pass
+
+                    else:
+                        ## 後方 or 横 移動の場合飛び越えできない。通常処理へ
+                        pass
                 
-                ### 通常駒は飛び越えられない。移動先への直線上に別の駒があったら移動できない
+                ### 通常の駒は飛び越えができない。移動先への直線上に別の駒があったら移動できない
                 ## 斜め移動
                 elif abs(vec_y) >= 2 and abs(vec_x) >= 2:
                     i = 0
@@ -483,6 +521,18 @@ class Gungi:
         self.all_piece[49].state = self.all_piece[1].state_ban()
         self.all_piece[50].state = self.all_piece[1].state_ban()
         return 0
+    
+    def setup_game_begginer02(self):
+        self.setup_game_begginer01()
+        self.all_piece[22].state = self.all_piece[1].state_hand()
+        self.all_piece[23].state = self.all_piece[1].state_hand()
+        self.all_piece[47].state = self.all_piece[1].state_hand()
+        self.all_piece[48].state = self.all_piece[1].state_hand()
+        self.play_piece([7,2,1,22], setup=True)
+        self.play_piece([7,6,1,23], setup=True)
+        self.play_piece([1,2,1,47], setup=True)
+        self.play_piece([1,6,1,48], setup=True)
+
 
 
 
